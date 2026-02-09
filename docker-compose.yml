@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config/:/app/config
+      - ./icons/:/app/public/icons
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: UTC
+    restart: unless-stopped
+    networks:
+      - homelab
+    labels:
+      # Internal routing only - NOT exposed through external reverse proxy
+      traefik.enable: "true"
+      traefik.http.routers.homepage.rule: "Host(`home.robinsuter.com`)"
+      traefik.http.routers.homepage.entrypoints: "websecure"
+      traefik.http.routers.homepage.tls.certresolver: "letsencrypt"
+      traefik.http.services.homepage.loadbalancer.server.port: "3000"
+      # Comment out or remove the above if not using Traefik
+      # Alternative: Configure internal DNS and routing through your reverse proxy
+      # to only allow internal network access to home.robinsuter.com
+
+networks:
+  homelab:
+    driver: bridge

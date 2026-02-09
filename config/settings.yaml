@@ -1,0 +1,26 @@
+# Homepage Settings Configuration
+# Reference: https://gethomepage.dev/configs/settings/
+
+title: Robin's Homelab
+subtitle: Dashboard
+background:
+  image: https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=80
+  blur: sm
+  opacity: 50
+
+# Card appearance
+cardBlur: md
+theme: auto
+color: slate
+hideVersion: false
+
+# Search engine settings
+searchEngineProvider: google
+
+# Language
+language: en
+
+# Layout settings
+layout:
+  # Customize layout as needed
+  columns: 3

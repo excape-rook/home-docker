@@ -1,0 +1,98 @@
+# Example Traefik Configuration for Homepage
+# This is a reference for configuring Traefik to route to Homepage
+# Adapt to your existing Traefik setup
+
+# Option 1: Docker labels (preferred - see docker-compose.yml)
+# The homepage service uses Docker labels for Traefik configuration
+
+# Option 2: Static Configuration (traefik.yml)
+# Add this section to your Traefik configuration:
+
+api:
+  dashboard: true
+  debug: true
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+  file:
+    filename: /traefik/rules.yml
+    watch: true
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: admin@robinsuter.com
+      storage: acme.json
+      httpChallenge:
+        entryPoint: web
+
+# Option 3: Dynamic Configuration Rules (traefik/rules.yml)
+# For more granular control, add this to rules.yml:
+
+http:
+  routers:
+    homepage:
+      rule: "Host(`home.robinsuter.com`)"
+      service: homepage
+      entrypoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+      # Restrict to internal IPs only
+      middlewares:
+        - internal-ip-whitelist
+
+  services:
+    homepage:
+      loadBalancer:
+        servers:
+          - url: "http://homepage:3000"
+
+  middlewares:
+    # IP whitelist for internal access only
+    internal-ip-whitelist:
+      ipAllowList:
+        sourceRange:
+          - "10.0.0.0/8"      # RFC1918 - Class A private
+          - "172.16.0.0/12"   # RFC1918 - Class B private
+          - "192.168.0.0/16"  # RFC1918 - Class C private
+          - "127.0.0.1/32"    # Localhost
+
+    # Optional: Add basic authentication
+    homepage-auth:
+      basicAuth:
+        users:
+          - "admin:hashed_password_here"
+
+# Option 4: Redirect HTTP to HTTPS (recommended)
+
+http:
+  routers:
+    homepage-http:
+      rule: "Host(`home.robinsuter.com`)"
+      service: homepage
+      entrypoints:
+        - web
+      middlewares:
+        - redirect-https
+
+  middlewares:
+    redirect-https:
+      redirectScheme:
+        scheme: https
+        permanent: true
+
+---
+# Ensure the following in your main Traefik config:
+# 1. Docker labels are enabled: providers.docker.exposedByDefault = false
+# 2. Port forwarding: 80 → web, 443 → websecure
+# 3. SSL certificates are configured and stored
+# 4. Network: Homepage and Traefik must be on the same Docker network
