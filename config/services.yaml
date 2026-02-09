@@ -1,0 +1,84 @@
+# Homepage Services Configuration
+# Reference: https://gethomepage.dev/configs/services/
+
+---
+- Home Automation:
+    - Home Assistant:
+        href: https://ha.robinsuter.com
+        description: Home automation and control
+        icon: home-assistant
+        # Optional: uncomment to fetch real data from HA
+        # widget:
+        #   type: homeassistant
+        #   url: https://ha.robinsuter.com
+        #   key: {{ env:HASS_TOKEN }}
+
+- Media & Entertainment:
+    # Add services like Plex, Jellyfin, etc.
+    - Placeholder:
+        href: "#"
+        description: Media server
+        icon: mdi-play-circle
+
+- Monitoring & Logs:
+    # Add services like Prometheus, Grafana, Loki, etc.
+    - Placeholder:
+        href: "#"
+        description: Monitoring
+        icon: mdi-chart-line
+
+- Development:
+    # Add services like Git, CI/CD, etc.
+    - Placeholder:
+        href: "#"
+        description: Development tools
+        icon: mdi-github
+
+- Storage & Backup:
+    # Add services like NextCloud, Synology, etc.
+    - Placeholder:
+        href: "#"
+        description: Storage
+        icon: mdi-folder-network
+
+- Network & Security:
+    - Traefik:
+        href: https://TRAEFIK_HOST:8080/dashboard/
+        description: Reverse proxy & routing
+        icon: traefik
+        # Uncomment to show Traefik dashboard status
+        # widget:
+        #   type: traefik
+        #   url: http://TRAEFIK_HOST:8080
+
+# Widget examples for common services
+# Uncomment and configure as needed:
+
+# Plex:
+#   - href: https://app.plex.tv/
+#     description: Plex Media Server
+#     icon: plex
+#     widget:
+#       type: plex
+#       url: http://plex-host:32400
+#       key: YOUR_PLEX_API_KEY
+
+# Proxmox:
+#   - href: https://proxmox-host:8006
+#     description: Proxmox VE
+#     icon: proxmox
+#     widget:
+#       type: proxmox
+#       url: https://proxmox-host:8006
+#       username: root@pam
+#       password: {{ env:PROXMOX_PASSWORD }}
+
+# Synology:
+#   - href: https://synology-host:5001
+#     description: Synology NAS
+#     icon: synology
+#     widget:
+#       type: synology
+#       url: https://synology-host:5001
+#       username: {{ env:SYNOLOGY_USER }}
+#       password: {{ env:SYNOLOGY_PASS }}

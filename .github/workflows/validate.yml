@@ -1,0 +1,66 @@
+name: Validate Configuration
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'config/**'
+      - 'docker-compose.yml'
+      - '.github/workflows/**'
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Validate docker-compose.yml
+        run: |
+          docker-compose config -q
+        continue-on-error: true
+
+      - name: Check YAML syntax
+        run: |
+          sudo apt-get install -y yamllint
+          yamllint config/ || true
+
+      - name: Validate environment variables
+        run: |
+          if [ -f .env.example ]; then
+            echo "✓ .env.example found"
+          fi
+
+      - name: Check required files
+        run: |
+          required_files=("README.md" "docker-compose.yml" ".gitignore" ".env.example")
+          for file in "${required_files[@]}"; do
+            if [ -f "$file" ]; then
+              echo "✓ $file found"
+            else
+              echo "✗ $file missing"
+              exit 1
+            fi
+          done
+
+      - name: Validate YAML config files
+        run: |
+          python3 << EOF
+          import yaml
+          import glob
+          
+          errors = []
+          for yaml_file in glob.glob('config/*.yaml'):
+              try:
+                  with open(yaml_file, 'r') as f:
+                      yaml.safe_load(f)
+                  print(f"✓ {yaml_file} is valid")
+              except yaml.YAMLError as e:
+                  errors.append(f"✗ {yaml_file}: {e}")
+          
+          if errors:
+              for error in errors:
+                  print(error)
+              exit(1)
+          EOF

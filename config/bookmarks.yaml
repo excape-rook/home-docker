@@ -1,0 +1,30 @@
+# Homepage Bookmarks Configuration
+# Reference: https://gethomepage.dev/configs/bookmarks/
+
+---
+- Developer:
+    - GitHub:
+        href: https://github.com
+        icon: github
+    - Stack Overflow:
+        href: https://stackoverflow.com
+        icon: stack-overflow
+
+- Documentation:
+    - Homepage Docs:
+        href: https://gethomepage.dev/
+        icon: book
+    - NixOS Wiki:
+        href: https://nixos.wiki/
+        icon: nixos
+    - Docker Docs:
+        href: https://docs.docker.com/
+        icon: docker
+
+- Internal Services:
+    - Home Assistant Docs:
+        href: https://www.home-assistant.io/
+        icon: home-assistant
+    - Traefik Docs:
+        href: https://doc.traefik.io/
+        icon: traefik

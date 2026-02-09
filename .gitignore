@@ -1,0 +1,23 @@
+# Environment variables
+.env
+.env.local
+
+# Sensitive data
+*.key
+*.pem
+secrets/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# System
+.DS_Store
+Thumbs.db
+*.log
+
+# Docker
+docker-compose.override.yml

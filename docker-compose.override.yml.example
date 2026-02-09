@@ -1,0 +1,24 @@
+# Example docker-compose override for development
+# Copy this file to docker-compose.override.yml to override default settings
+
+version: '3.8'
+
+services:
+  homepage:
+    # Uncomment to rebuild image locally
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+
+    # Override port for development
+    ports:
+      - "8080:3000"  # Access at http://localhost:8080 instead of 3000
+
+    # Additional debug settings
+    environment:
+      DEBUG: "true"
+
+    # Mount config directory for hot reload (not all config changes reload)
+    volumes:
+      - ./config/:/app/config
+      - ./icons/:/app/public/icons
